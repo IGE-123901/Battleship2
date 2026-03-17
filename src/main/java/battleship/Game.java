@@ -3,6 +3,7 @@ package battleship;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import org.apache.commons.lang3.time.StopWatch;
 
 import java.util.*;
 
@@ -321,6 +322,9 @@ public class Game implements IGame
 	 */
 	public void fireShots(List<IPosition> shots)
 	{
+		StopWatch watch = new StopWatch();
+		watch.start();
+
 		assert shots != null;
 
 		List<ShotResult> shotResults = new ArrayList<ShotResult>();
@@ -343,6 +347,10 @@ public class Game implements IGame
 		alienMoves.add(move);
 
 		moveNumber++;
+
+		watch.stop();
+		System.out.println(">>> Tempo gasto a processar esta jogada: " + watch.getTime() + "ms");
+		System.out.println();
 	}
 
 	/**
