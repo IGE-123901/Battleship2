@@ -90,6 +90,12 @@
 			<artifactId>sqlite-jdbc</artifactId>
 			<version>3.49.1.0</version>
 		</dependency>
+
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-slf4j2-impl</artifactId>
+			<version>${apache.log4j.version}</version>
+		</dependency>
 	</dependencies>
 
 	<build>
