@@ -1,4 +1,5 @@
 package battleship;
+
 import java.sql.*;
 
 public class DatabaseManager {
@@ -6,6 +7,7 @@ public class DatabaseManager {
     private Connection conn;
 
     public DatabaseManager() throws SQLException {
+        // Estabelece a ligação e cria a tabela se não existir
         conn = DriverManager.getConnection(DB_URL);
         createTable();
     }
@@ -21,30 +23,33 @@ public class DatabaseManager {
         }
     }
 
-    public void guardarJogada(String tiro, String resultado) throws SQLException {
+    public void guardarJogada(String tiroJson, String resultado) throws SQLException {
         String sql = "INSERT INTO jogadas (timestamp, tiro, resultado) VALUES (datetime('now'), ?, ?)";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, tiro);
+            pstmt.setString(1, tiroJson);
             pstmt.setString(2, resultado);
             pstmt.executeUpdate();
         }
     }
 
     public void listarJogadas() throws SQLException {
+        String sql = "SELECT * FROM jogadas";
         try (Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery("SELECT * FROM jogadas")) {
-            System.out.println("\n=== HISTÓRICO DE JOGADAS (SQLITE) ===");
+             ResultSet rs = stmt.executeQuery(sql)) {
+            System.out.println("\n=== HISTÓRICO DE JOGADAS (BD) ===");
             while (rs.next()) {
                 System.out.println(rs.getInt("id") + " | " +
                         rs.getString("timestamp") + " | " +
                         rs.getString("tiro") + " | " +
                         rs.getString("resultado"));
             }
-            System.out.println("====================================\n");
+            System.out.println("================================\n");
         }
     }
 
     public void fechar() throws SQLException {
-        if (conn != null) conn.close();
+        if (conn != null && !conn.isClosed()) {
+            conn.close();
+        }
     }
 }
