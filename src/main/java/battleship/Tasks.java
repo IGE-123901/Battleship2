@@ -133,8 +133,6 @@ public class Tasks {
 						try { db.listarJogadas(); } catch (SQLException e) { e.printStackTrace(); }
 					}
 					break;
-				case AJUDA:
-					menuHelp();
                 case AJUDA:
                     menuHelp();
                     break;
