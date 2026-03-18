@@ -34,12 +34,14 @@ public class Tasks {
 	private static final String STATUS = "estado";
 	private static final String SIMULA = "simula";
 	private static final String HISTORICO = "historico"; // Nova string para o comando
+	private static final String SCOREBOARD = "scoreboard";
 
 	/**
 	 * This task also tests the fighting element of a round of three shots
 	 */
 	public static void menu() {
 
+		Scoreboard scoreboard = new Scoreboard();
 		IFleet myFleet = null;
 		IGame game = null;
 		DatabaseManager db = null;
@@ -87,6 +89,8 @@ public class Tasks {
 						game.printMyBoard(true, false);
 
 						if (game.getRemainingShips() == 0) {
+							int totalShots = game.getAlienMoves().size() * Game.NUMBER_SHOTS;
+							scoreboard.saveGame("LOSS", totalShots);
 							game.over();
 							fecharBD(db); // Fecha antes de sair
 							System.exit(0);
@@ -112,6 +116,8 @@ public class Tasks {
 						}
 
 						if (game.getRemainingShips() == 0) {
+							int totalShots = game.getAlienMoves().size() * Game.NUMBER_SHOTS;
+							scoreboard.saveGame("LOSS", totalShots);
 							game.over();
 							fecharBD(db); // Fecha antes de sair
 							System.exit(0);
@@ -129,6 +135,11 @@ public class Tasks {
 					break;
 				case AJUDA:
 					menuHelp();
+                case AJUDA:
+                    menuHelp();
+                    break;
+				case SCOREBOARD:
+					scoreboard.printScoreboard();
 					break;
 				default:
 					System.out.println("Que comando é esse??? Repete ...");
@@ -163,6 +174,7 @@ public class Tasks {
 		System.out.println("- " + SIMULA + ": Simula um jogo completo.");
 		System.out.println("- " + TIROS + ": Lista os tiros válidos realizados (* = tiro em navio, o = tiro na água)");
 		System.out.println("- " + HISTORICO + ": Mostra o histórico de jogadas na base de dados."); // Nova ajuda
+		System.out.println("- " + SCOREBOARD + ": Mostra o histórico de resultados dos jogos anteriores.");
 		System.out.println("- " + DESISTIR + ": Encerra o jogo.");
 		System.out.println("===============================================================");
 	}
