@@ -1,6 +1,7 @@
 package battleship;
 import java.sql.*;
 
+@SuppressWarnings({"SqlNoDataSourceInspection", "SqlDialectInspection"})
 public class Scoreboard {
 
     private static final String DB_FILE = "scoreboard.db";
@@ -11,6 +12,7 @@ public class Scoreboard {
         try (Connection conn = DriverManager.getConnection(DB_URL);
              Statement stmt = conn.createStatement()) {
 
+            //noinspection SqlNoDataSourceInspection,SqlDialectInspection
             stmt.execute("""
                 CREATE TABLE IF NOT EXISTS games (
                     id        INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -27,6 +29,7 @@ public class Scoreboard {
 
     // Guarda o resultado de um jogo
     public void saveGame(String result, int totalShots) {
+        //noinspection SqlNoDataSourceInspection,SqlDialectInspection
         String sql = "INSERT INTO games (result, shots, date) VALUES (?, ?, datetime('now'))";
 
         try (Connection conn = DriverManager.getConnection(DB_URL);
@@ -44,6 +47,7 @@ public class Scoreboard {
 
     // Mostra o scoreboard na consola
     public void printScoreboard() {
+        //noinspection SqlNoDataSourceInspection,SqlDialectInspection
         String sql = "SELECT result, shots, date FROM games ORDER BY id DESC";
 
         try (Connection conn = DriverManager.getConnection(DB_URL);
