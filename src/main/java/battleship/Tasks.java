@@ -135,8 +135,6 @@ public class Tasks {
 					break;
 				case AJUDA:
 					menuHelp();
-                case AJUDA:
-                    menuHelp();
                     break;
 				case SCOREBOARD:
 					scoreboard.printScoreboard();
