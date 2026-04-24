@@ -1,4 +1,10 @@
 # ⚓ Battleship 2.0
+[Vídeo - Parte B](https://youtu.be/w_w_PUaAarM)
+
+[Vídeo - Parte D](https://youtu.be/cwfdBGRgMXk)
+### Guião da personalização com o Gemini:
+Enviei as prompt do guião, acrescentei que a IA deve evitar enviar texto desnecessário, que deve devolver uma resposta em texto como a que o programa devolve ("Jogada nº5 -> 3 tiros válidos: 3 tiros na água") antes d0 JSON em resposta aos nossos ataques, fiz o mesmo para quando fosse o Gemini a atacar, devendo usar o comando "rajada" + 3 posições depois do JSON do ataque.
+No fundo foi impossível realizar um jogo com a IA, uma vez que ela não assumia quando eu acertava um tiro e no final começou até mesmo a halucinar, confundindo as suas jogadas com as minhas e não tendo a capacidade de guardar e aceder às suas jogadas anteriores, isto foi tudo piorando (ou tornando-se mais evidente) à medida que o jogo progrediu. Talvez dando acesso ao Gemini às bases de dados do projeto através de API calls ou usando um modelo melhor fosse possível realizar um jogo, mas desta forma com este modelo provou-se impossível.
 
 ![Build Status](https://img.shields.io/badge/build-passing-brightgreen)
 ![Java Version](https://img.shields.io/badge/Java-17%2B-blue)
