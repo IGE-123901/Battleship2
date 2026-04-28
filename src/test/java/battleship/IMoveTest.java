@@ -48,7 +48,7 @@ public class IMoveTest {
                 () -> assertNotNull(result, "Error: expected a non-null Move object"),
                 () -> assertEquals(2, result.getNumber(), "Error: expected move number to be 2"),
                 () -> assertEquals(2, result.getShots().size(), "Error: expected 2 shots in the list"),
-                () -> assertEquals(0, result.getShots().get(0).getRow(), "Error: expected row of first shot to be 0")
+                () -> assertEquals(0, result.getShots().getFirst().getRow(), "Error: expected row of first shot to be 0")
         );
     }
 }
