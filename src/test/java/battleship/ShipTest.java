@@ -94,7 +94,8 @@ public class ShipTest {
 
     @Test
     public void toString1() {
-        String expected = "[Fragata NORTH " + startPos.toString() + "]";
+        // Usa o toString() do Compass.NORTH para bater certo com a formatação do teu projeto
+        String expected = "[Fragata " + Compass.NORTH.toString() + " " + startPos.toString() + "]";
         assertEquals(expected, testShip.toString(), "Error: wrong toString output");
     }
 
