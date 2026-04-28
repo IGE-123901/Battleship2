@@ -10,7 +10,7 @@ import java.util.List;
 
 /**
  * Test class for class Ship.
- * Author: ${user.name}
+ * Author: ${Dinis Silva}
  * Date: 2026-04-28
  * Cyclomatic Complexity:
  * - constructor(): 1
