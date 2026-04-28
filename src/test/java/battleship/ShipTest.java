@@ -1,220 +1,339 @@
 package battleship;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+
 import java.util.List;
 
-@DisplayName("Ship Tests (via Galleon)")
+/**
+ * Test class for class Ship.
+ * Author: ${user.name}
+ * Date: 2026-04-28
+ * Cyclomatic Complexity:
+ * - constructor(): 1
+ * - buildShip(): 6
+ * - getCategory(): 1
+ * - getPositions(): 1
+ * - getPosition(): 1
+ * - getBearing(): 1
+ * - getSize(): 1
+ * - toString(): 1
+ * - stillFloating(): 3
+ * - occupies(): 3
+ * - getTopMostPos(): 3
+ * - getBottomMostPos(): 3
+ * - getLeftMostPos(): 3
+ * - getRightMostPos(): 3
+ * - tooCloseTo(IShip): 3
+ * - tooCloseTo(IPosition): 3
+ * - shoot(): 3
+ * - sink(): 2
+ * - getAdjacentPositions(): 5
+ */
 public class ShipTest {
 
-    private Ship ship;
-    private Position pos;
+    private Ship testShip;
+    private Position startPos;
+
+    private static class ConcreteShip extends Ship {
+        public ConcreteShip(String category, Compass bearing, IPosition pos, int size) {
+            super(category, bearing, pos, size);
+            for (int i = 0; i < size; i++) {
+                // Simula navio na horizontal (colunas a somar) ou vertical
+                this.positions.add(new Position(pos.getRow() + i, pos.getColumn() + i));
+            }
+        }
+    }
 
     @BeforeEach
     public void setUp() {
-        // Inicializamos o Galeão na posição (3,3) virado a Norte
-        pos = new Position(3, 3);
-        ship = new Galleon(Compass.NORTH, pos);
+        this.startPos = new Position(2, 2);
+        this.testShip = new ConcreteShip("Fragata", Compass.NORTH, startPos, 3);
     }
 
     @AfterEach
     public void tearDown() {
-        ship = null;
-        pos = null;
+        this.testShip = null;
+        this.startPos = null;
     }
 
-    // ---------------------------------------------------------------
-    // buildShip() — CC = 6
-    // ---------------------------------------------------------------
-    @Nested
-    @DisplayName("buildShip() Tests")
-    class BuildShipTests {
-        @Test
-        @DisplayName("buildShip1 — barca")
-        void buildShip1() {
-            Ship s = Ship.buildShip("barca", Compass.NORTH, new Position(0,0));
-            // Apenas garantimos que cria o objeto com sucesso, evitando falhas por maiúsculas/minúsculas
-            assertNotNull(s, "Erro: A barca não devia ser nula");
-        }
+    // ================= GETTERS E CONSTRUTOR (CC = 1) =================
 
-        @Test
-        @DisplayName("buildShip2 — caravela")
-        void buildShip2() {
-            Ship s = Ship.buildShip("caravela", Compass.NORTH, new Position(0,0));
-            assertNotNull(s, "Erro: A caravela não devia ser nula");
-        }
-
-        @Test
-        @DisplayName("buildShip3 — nau")
-        void buildShip3() {
-            Ship s = Ship.buildShip("nau", Compass.NORTH, new Position(0,0));
-            assertNotNull(s, "Erro: A nau não devia ser nula");
-        }
-
-        @Test
-        @DisplayName("buildShip4 — fragata")
-        void buildShip4() {
-            Ship s = Ship.buildShip("fragata", Compass.NORTH, new Position(0,0));
-            assertNotNull(s, "Erro: A fragata não devia ser nula");
-        }
-
-        @Test
-        @DisplayName("buildShip5 — galeao")
-        void buildShip5() {
-            Ship s = Ship.buildShip("galeao", Compass.NORTH, new Position(0,0));
-            assertNotNull(s, "Erro: O galeão não devia ser nulo");
-        }
-
-        @Test
-        @DisplayName("buildShip6 — default case")
-        void buildShip6() {
-            Ship s = Ship.buildShip("submarino", Compass.NORTH, new Position(0,0));
-            assertNull(s, "Erro: Um barco desconhecido deve devolver null");
-        }
+    @Test
+    public void constructor1() {
+        assertNotNull(testShip, "Error: expected a non-null Ship instance");
     }
 
-    // ---------------------------------------------------------------
-    // Ship() constructor — CC = 1
-    // ---------------------------------------------------------------
-    @Nested
-    @DisplayName("Constructor Tests")
-    class ConstructorTests {
-        @Test
-        @DisplayName("Constructor valid initialization")
-        void testConstructor() {
-            assertAll("Ship State",
-                    () -> assertNotNull(ship, "Erro: Instância nula."),
-                    () -> assertEquals("Galeao", ship.getCategory(), "Erro: Categoria incorreta."),
-                    () -> assertEquals(Compass.NORTH, ship.getBearing(), "Erro: Orientação incorreta."),
-                    () -> assertEquals(5, ship.getSize(), "Erro: Tamanho incorreto."),
-                    () -> assertFalse(ship.getPositions().isEmpty(), "Erro: Posições vazias.")
-            );
-        }
+    @Test
+    public void getCategory1() {
+        assertEquals("Fragata", testShip.getCategory(), "Error: wrong category");
     }
 
-    // ---------------------------------------------------------------
-    // getAdjacentPositions() — CC = 4
-    // ---------------------------------------------------------------
-    @Nested
-    @DisplayName("getAdjacentPositions() Tests")
-    class GetAdjacentPositionsTests {
-        @Test
-        @DisplayName("getAdjacentPositions — list is non-null")
-        void testGetAdjacentPositions1() {
-            assertNotNull(ship.getAdjacentPositions(), "Erro: a lista de adjacentes não pode ser nula");
-        }
-
-        @Test
-        @DisplayName("getAdjacentPositions — no duplicates")
-        void testGetAdjacentPositions2() {
-            List<IPosition> adj = ship.getAdjacentPositions();
-            long distinct = adj.stream().distinct().count();
-            assertEquals(distinct, adj.size(), "Erro: não devem existir posições repetidas na lista");
-        }
+    @Test
+    public void getPositions1() {
+        assertEquals(3, testShip.getPositions().size(), "Error: wrong positions size");
     }
 
-    // ---------------------------------------------------------------
-    // stillFloating() — CC = 3
-    // ---------------------------------------------------------------
-    @Nested
-    @DisplayName("stillFloating() Tests")
-    class StillFloatingTests {
-        @Test
-        @DisplayName("stillFloating1 — all positions intact")
-        void testStillFloating1() {
-            assertTrue(ship.stillFloating(), "Erro: Barco intacto deve flutuar.");
-        }
-
-        @Test
-        @DisplayName("stillFloating2 — partially hit")
-        void testStillFloating2() {
-            ship.getPositions().get(0).shoot();
-            assertTrue(ship.stillFloating(), "Erro: Barco com 1 tiro deve flutuar.");
-        }
-
-        @Test
-        @DisplayName("stillFloating3 — all hit")
-        void testStillFloating3() {
-            ship.sink();
-            assertFalse(ship.stillFloating(), "Erro: Barco afundado não deve flutuar.");
-        }
+    @Test
+    public void getPosition1() {
+        assertEquals(startPos, testShip.getPosition(), "Error: wrong starting position");
     }
 
-    // ---------------------------------------------------------------
-    // getTop/Bottom/Left/Right MostPos — CC = 3 each
-    // ---------------------------------------------------------------
-    @Nested
-    @DisplayName("Boundary Position Tests")
-    class BoundaryTests {
-        @Test
-        @DisplayName("getTopMostPos — NORTH layout min row")
-        void testGetTopMostPos() {
-            // Galleon Norte em (3,3) de acordo com o teu código fillNorth:
-            // Pos1: (3,3), Pos2: (3,4), Pos3: (3,5), Pos4: (4,4), Pos5: (5,4)
-            assertEquals(3, ship.getTopMostPos(), "Erro: Linha mais ao topo deve ser 3");
-        }
-
-        @Test
-        @DisplayName("getBottomMostPos — NORTH layout max row")
-        void testGetBottomMostPos() {
-            assertEquals(5, ship.getBottomMostPos(), "Erro: Linha mais ao fundo deve ser 5");
-        }
-
-        @Test
-        @DisplayName("getLeftMostPos — NORTH layout min col")
-        void testGetLeftMostPos() {
-            assertEquals(3, ship.getLeftMostPos(), "Erro: Coluna mais à esquerda deve ser 3");
-        }
-
-        @Test
-        @DisplayName("getRightMostPos — NORTH layout max col")
-        void testGetRightMostPos() {
-            assertEquals(5, ship.getRightMostPos(), "Erro: Coluna mais à direita deve ser 5");
-        }
+    @Test
+    public void getBearing1() {
+        assertEquals(Compass.NORTH, testShip.getBearing(), "Error: wrong bearing");
     }
 
-    // ---------------------------------------------------------------
-    // shoot() — CC = 3
-    // ---------------------------------------------------------------
-    @Nested
-    @DisplayName("shoot() Tests")
-    class ShootTests {
-        @Test
-        @DisplayName("shoot1 — hit valid position")
-        void testShoot1() {
-            IPosition target = ship.getPositions().get(0);
-            ship.shoot(target);
-            assertTrue(target.isHit(), "Erro: A posição devia estar marcada como hit");
-        }
-
-        @Test
-        @DisplayName("shoot2 — miss (distant position)")
-        void testShoot2() {
-            IPosition miss = new Position(9, 9);
-            ship.shoot(miss);
-            assertFalse(ship.getPositions().get(0).isHit(), "Erro: Não devia afetar posições do barco");
-        }
+    @Test
+    public void getSize1() {
+        assertEquals(3, testShip.getSize(), "Error: wrong size");
     }
 
-    // ---------------------------------------------------------------
-    // tooCloseTo() — CC = 3
-    // ---------------------------------------------------------------
-    @Nested
-    @DisplayName("tooCloseTo() Tests")
-    class ProximityTests {
-        @Test
-        @DisplayName("tooCloseTo Ship — overlap")
-        void testTooCloseToShip1() {
-            Ship nearbyShip = new Galleon(Compass.NORTH, new Position(3, 3));
-            assertTrue(ship.tooCloseTo(nearbyShip), "Erro: Barcos sobrepostos estão demasiado perto");
-        }
+    @Test
+    public void toString1() {
+        String expected = "[Fragata NORTH " + startPos.toString() + "]";
+        assertEquals(expected, testShip.toString(), "Error: wrong toString output");
+    }
 
-        @Test
-        @DisplayName("tooCloseTo Position — adjacent")
-        void testTooCloseToPosition1() {
-            // (3,2) tem diferença de 1 coluna para a âncora (3,3), ou seja, é adjacente
-            Position adjPos = new Position(3, 2);
-            assertTrue(ship.tooCloseTo(adjPos), "Erro: Posição adjacente deve retornar true");
-        }
+    // ================= MÉTODOS ORIGINAIS (CC = 3 E CC = 6) =================
+
+    @Test
+    public void buildShip1() {
+        Ship s = Ship.buildShip("barca", Compass.NORTH, startPos);
+        assertInstanceOf(Barge.class, s, "Error: expected a Barge instance");
+    }
+
+    @Test
+    public void buildShip2() {
+        Ship s = Ship.buildShip("caravela", Compass.NORTH, startPos);
+        assertInstanceOf(Caravel.class, s, "Error: expected a Caravel instance");
+    }
+
+    @Test
+    public void buildShip3() {
+        Ship s = Ship.buildShip("nau", Compass.NORTH, startPos);
+        assertInstanceOf(Carrack.class, s, "Error: expected a Carrack instance");
+    }
+
+    @Test
+    public void buildShip4() {
+        Ship s = Ship.buildShip("fragata", Compass.NORTH, startPos);
+        assertInstanceOf(Frigate.class, s, "Error: expected a Frigate instance");
+    }
+
+    @Test
+    public void buildShip5() {
+        Ship s = Ship.buildShip("galeao", Compass.NORTH, startPos);
+        assertInstanceOf(Galleon.class, s, "Error: expected a Galleon instance");
+    }
+
+    @Test
+    public void buildShip6() {
+        Ship s = Ship.buildShip("submarino_invalido", Compass.NORTH, startPos);
+        assertNull(s, "Error: expected null");
+    }
+
+    @Test
+    public void stillFloating1() {
+        assertTrue(testShip.stillFloating(), "Error: ship should be floating");
+    }
+
+    @Test
+    public void stillFloating2() {
+        testShip.sink();
+        assertFalse(testShip.stillFloating(), "Error: ship should not be floating");
+    }
+
+    @Test
+    public void stillFloating3() {
+        Ship empty = new ConcreteShip("E", Compass.NORTH, startPos, 0);
+        assertFalse(empty.stillFloating(), "Error: empty ship is not floating");
+    }
+
+    @Test
+    public void occupies1() {
+        assertTrue(testShip.occupies(testShip.getPositions().get(0)), "Error: should occupy");
+    }
+
+    @Test
+    public void occupies2() {
+        assertFalse(testShip.occupies(new Position(9, 9)), "Error: should not occupy");
+    }
+
+    @Test
+    public void occupies3() {
+        Ship empty = new ConcreteShip("E", Compass.NORTH, startPos, 0);
+        assertFalse(empty.occupies(startPos), "Error: empty ship occupies nothing");
+    }
+
+    // ================= BOUNDARY GETTERS (CC = 3 cada) =================
+    // Testam o if, o salto do if, e o bypass do ciclo (tamanho 0 ou 1)
+
+    @Test
+    public void getTopMostPos1() {
+        // Original: (2,2), (3,3), (4,4). Não entra no IF porque 3 < 2 é falso.
+        assertEquals(2, testShip.getTopMostPos(), "Error: top most should be 2");
+    }
+
+    @Test
+    public void getTopMostPos2() {
+        // Substitui a posição no índice 1 por uma nova Posição com row = 1. Entra no IF.
+        testShip.getPositions().set(1, new Position(1, 3));
+        assertEquals(1, testShip.getTopMostPos(), "Error: top most should be 1");
+    }
+
+    @Test
+    public void getTopMostPos3() {
+        // Tamanho 1 não executa o ciclo for.
+        Ship small = new ConcreteShip("S", Compass.NORTH, startPos, 1);
+        assertEquals(2, small.getTopMostPos(), "Error: bypass loop");
+    }
+
+    @Test
+    public void getBottomMostPos1() {
+        // Original: (2,2), (3,3), (4,4). Entra no IF porque 3 > 2 é verdadeiro.
+        assertEquals(4, testShip.getBottomMostPos(), "Error: bottom most should be 4");
+    }
+
+    @Test
+    public void getBottomMostPos2() {
+        // Substitui as posições para que a linha seja sempre menor que 2. NÃO entra no IF.
+        testShip.getPositions().set(1, new Position(1, 3));
+        testShip.getPositions().set(2, new Position(0, 4));
+        assertEquals(2, testShip.getBottomMostPos(), "Error: bottom most should be 2");
+    }
+
+    @Test
+    public void getBottomMostPos3() {
+        Ship small = new ConcreteShip("S", Compass.NORTH, startPos, 1);
+        assertEquals(2, small.getBottomMostPos(), "Error: bypass loop");
+    }
+
+    @Test
+    public void getLeftMostPos1() {
+        // Original: (2,2), (3,3), (4,4). Não entra no IF porque 3 < 2 é falso.
+        assertEquals(2, testShip.getLeftMostPos(), "Error: left most should be 2");
+    }
+
+    @Test
+    public void getLeftMostPos2() {
+        // Substitui a posição no índice 1 por uma com coluna = 1. Entra no IF.
+        testShip.getPositions().set(1, new Position(3, 1));
+        assertEquals(1, testShip.getLeftMostPos(), "Error: left most should be 1");
+    }
+
+    @Test
+    public void getLeftMostPos3() {
+        Ship small = new ConcreteShip("S", Compass.NORTH, startPos, 1);
+        assertEquals(2, small.getLeftMostPos(), "Error: bypass loop");
+    }
+
+    @Test
+    public void getRightMostPos1() {
+        // Original: (2,2), (3,3), (4,4). Entra no IF porque 3 > 2 é verdadeiro.
+        assertEquals(4, testShip.getRightMostPos(), "Error: right most should be 4");
+    }
+
+    @Test
+    public void getRightMostPos2() {
+        // Substitui para colunas menores que 2. NÃO entra no IF.
+        testShip.getPositions().set(1, new Position(3, 1));
+        testShip.getPositions().set(2, new Position(4, 0));
+        assertEquals(2, testShip.getRightMostPos(), "Error: right most should be 2");
+    }
+
+    @Test
+    public void getRightMostPos3() {
+        Ship small = new ConcreteShip("S", Compass.NORTH, startPos, 1);
+        assertEquals(2, small.getRightMostPos(), "Error: bypass loop");
+    }
+
+    // ================= SHOOT E SINK (CC = 3 e CC = 2) =================
+
+    @Test
+    public void shoot1() {
+        testShip.shoot(testShip.getPositions().get(0)); // Atinge
+        assertTrue(testShip.getPositions().get(0).isHit(), "Error: should be hit");
+    }
+
+    @Test
+    public void shoot2() {
+        testShip.shoot(new Position(9, 9)); // Falha
+        assertFalse(testShip.getPositions().get(0).isHit(), "Error: should not be hit");
+    }
+
+    @Test
+    public void shoot3() {
+        Ship empty = new ConcreteShip("E", Compass.NORTH, startPos, 0);
+        empty.shoot(startPos); // Bypass loop
+        assertEquals(0, empty.getPositions().size(), "Error: empty bypass");
+    }
+
+    @Test
+    public void sink1() {
+        testShip.sink();
+        assertFalse(testShip.stillFloating(), "Error: should be sunk");
+    }
+
+    @Test
+    public void sink2() {
+        Ship empty = new ConcreteShip("E", Compass.NORTH, startPos, 0);
+        empty.sink(); // Bypass loop
+        assertFalse(empty.stillFloating(), "Error: bypass loop");
+    }
+
+    // ================= ADJACÊNCIAS E TOO CLOSE TO =================
+
+    @Test
+    public void tooCloseToPos1() {
+        IPosition adj = new Position(1, 2); // Adjacente a (2,2)
+        assertTrue(testShip.tooCloseTo(adj), "Error: should be too close");
+    }
+
+    @Test
+    public void tooCloseToPos2() {
+        IPosition far = new Position(9, 9);
+        assertFalse(testShip.tooCloseTo(far), "Error: should not be too close");
+    }
+
+    @Test
+    public void tooCloseToPos3() {
+        Ship empty = new ConcreteShip("E", Compass.NORTH, startPos, 0);
+        assertFalse(empty.tooCloseTo(startPos), "Error: loop bypass");
+    }
+
+    @Test
+    public void tooCloseToShip1() {
+        Ship other = new ConcreteShip("Other", Compass.NORTH, new Position(1, 2), 1);
+        assertTrue(testShip.tooCloseTo(other), "Error: ships should be too close");
+    }
+
+    @Test
+    public void tooCloseToShip2() {
+        Ship other = new ConcreteShip("Other", Compass.NORTH, new Position(9, 9), 1);
+        assertFalse(testShip.tooCloseTo(other), "Error: ships are far");
+    }
+
+    @Test
+    public void tooCloseToShip3() {
+        Ship other = new ConcreteShip("Other", Compass.NORTH, new Position(9, 9), 0); // ship vazio
+        assertFalse(testShip.tooCloseTo(other), "Error: loop bypass");
+    }
+
+    @Test
+    public void getAdjacentPositions1() {
+        List<IPosition> adj = testShip.getAdjacentPositions();
+        assertFalse(adj.isEmpty(), "Error: should have adjacencies");
+        // Valida se não contém posições do próprio navio
+        assertFalse(adj.contains(testShip.getPositions().get(0)), "Error: adj cannot contain ship itself");
+    }
+
+    @Test
+    public void getAdjacentPositions2() {
+        Ship empty = new ConcreteShip("E", Compass.NORTH, startPos, 0);
+        assertTrue(empty.getAdjacentPositions().isEmpty(), "Error: empty ship has no adjacencies");
     }
 }
