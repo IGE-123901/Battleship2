@@ -11,7 +11,7 @@ import java.util.Scanner;
 
 /**
  * Test class for Game.
- * Author: ${user.name}
+ * Author: ${Dinis Silva}
  * Date: 2026-04-28
  * Cyclomatic Complexity:
  * - constructor: 1
