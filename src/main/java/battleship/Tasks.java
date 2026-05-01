@@ -11,10 +11,16 @@ import org.jetbrains.annotations.NotNull;
  * The type Tasks.
  */
 public class Tasks {
+	@FunctionalInterface
+	interface ExitHandler {
+		void exit(int status);
+	}
+
 	/**
 	 * The constant LOGGER.
 	 */
 	private static final Logger LOGGER = LogManager.getLogger();
+	private static ExitHandler EXIT_HANDLER = System::exit;
 
 	/**
 	 * The constant GOODBYE_MESSAGE.
@@ -35,6 +41,14 @@ public class Tasks {
 	private static final String SIMULA = "simula";
 	private static final String HISTORICO = "historico"; // Nova string para o comando
 	private static final String SCOREBOARD = "scoreboard";
+
+	static void setExitHandler(ExitHandler handler) {
+		EXIT_HANDLER = (handler != null) ? handler : System::exit;
+	}
+
+	static void resetExitHandler() {
+		EXIT_HANDLER = System::exit;
+	}
 
 	/**
 	 * This task also tests the fighting element of a round of three shots
@@ -93,7 +107,7 @@ public class Tasks {
 							scoreboard.saveGame("LOSS", totalShots);
 							game.over();
 							fecharBD(db); // Fecha antes de sair
-							System.exit(0);
+							EXIT_HANDLER.exit(0);
 						}
 					}
 					break;
@@ -120,7 +134,7 @@ public class Tasks {
 							scoreboard.saveGame("LOSS", totalShots);
 							game.over();
 							fecharBD(db); // Fecha antes de sair
-							System.exit(0);
+							EXIT_HANDLER.exit(0);
 						}
 					}
 					break;
