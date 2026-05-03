@@ -3,6 +3,7 @@
 | Local | Nome do Cheiro | Nome da Refabricação | Nº Aluno |
 |-------|---------------|---------------------|----------|
 | Move:processEnemyFire|Repeated code fragments|Extract Method|122975|
+| Ship::StillFloating|Deep Nesting|Extract Method|122975|
 | Game (linha 123) | Redundant Initialization | Safe Delete | 123901 |
 | Game (class) | Large Class | Extract Class | 123901 |
 | Tasks::menu | Long Method | Extract Method | 123901 |
