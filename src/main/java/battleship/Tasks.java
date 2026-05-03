@@ -112,31 +112,7 @@ public class Tasks {
 					}
 					break;
 				case SIMULA:
-					if (game != null) {
-						while (game.getRemainingShips() > 0){
-							// Captura o JSON retornado e guarda na BD
-							String json = game.randomEnemyFire();
-							if (db != null) {
-								try { db.guardarJogada(json, "Simulação"); } catch (SQLException e) { e.printStackTrace(); }
-							}
-
-							myFleet.printStatus();
-							game.printMyBoard(true, false);
-							try {
-								Thread.sleep(3000);
-							} catch (InterruptedException e) {
-								Thread.currentThread().interrupt();
-							}
-						}
-
-						if (game.getRemainingShips() == 0) {
-							int totalShots = game.getAlienMoves().size() * Game.NUMBER_SHOTS;
-							scoreboard.saveGame("LOSS", totalShots);
-							game.over();
-							fecharBD(db); // Fecha antes de sair
-							EXIT_HANDLER.exit(0);
-						}
-					}
+					extracted(game, db, myFleet, scoreboard);
 					break;
 				case TIROS:
 					if (game != null)
@@ -161,6 +137,34 @@ public class Tasks {
 		}
 		fecharBD(db); // Fecha ao desistir
 		System.out.println(GOODBYE_MESSAGE);
+	}
+
+	private static void extracted(IGame game, DatabaseManager db, IFleet myFleet, Scoreboard scoreboard) {
+		if (game != null) {
+			while (game.getRemainingShips() > 0){
+				// Captura o JSON retornado e guarda na BD
+				String json = game.randomEnemyFire();
+				if (db != null) {
+					try { db.guardarJogada(json, "Simulação"); } catch (SQLException e) { e.printStackTrace(); }
+				}
+
+				myFleet.printStatus();
+				game.printMyBoard(true, false);
+				try {
+					Thread.sleep(3000);
+				} catch (InterruptedException e) {
+					Thread.currentThread().interrupt();
+				}
+			}
+
+			if (game.getRemainingShips() == 0) {
+				int totalShots = game.getAlienMoves().size() * Game.NUMBER_SHOTS;
+				scoreboard.saveGame("LOSS", totalShots);
+				game.over();
+				fecharBD(db); // Fecha antes de sair
+				EXIT_HANDLER.exit(0);
+			}
+		}
 	}
 
 	// Método auxiliar para fechar a BD sem repetir código
