@@ -9,6 +9,8 @@ import java.util.*;
 
 public class Game implements IGame
 {
+	private final GameStatistics gameStatistics = new GameStatistics();
+
 	/**
 	 * Prints the game board by representing the positions of ships, adjacent tiles,
 	 * shots, and other game elements onto the console. The method also optionally
@@ -152,10 +154,6 @@ public class Game implements IGame
 	private final IFleet alienFleet;
 	private final List<IMove> myMoves;
 
-	private Integer countInvalidShots;
-	private Integer countRepeatedShots;
-	private Integer countHits;
-	private Integer countSinks;
 	private int moveNumber;
 
 	//------------------------------------------------------------------
@@ -169,10 +167,10 @@ public class Game implements IGame
 		this.alienFleet = new Fleet();
 		this.myFleet = myFleet;
 
-		this.countInvalidShots = 0;
-		this.countRepeatedShots = 0;
-		this.countHits = 0;
-		this.countSinks = 0;
+		this.gameStatistics.setCountInvalidShots(0);
+		this.gameStatistics.setCountRepeatedShots(0);
+		this.gameStatistics.setCountHits(0);
+		this.gameStatistics.setCountSinks(0);
 	}
 
 	@Override
@@ -368,12 +366,12 @@ public class Game implements IGame
 		assert pos != null;
 
 		if (!pos.isInside()) {
-			countInvalidShots++;
+			gameStatistics.setCountInvalidShots(gameStatistics.getCountInvalidShots() + 1);
 			return new ShotResult(false, false, null, false);
 		}
 
 		if (isRepeated || repeatedShot(pos)) {
-			countRepeatedShots++;
+			gameStatistics.setCountRepeatedShots(gameStatistics.getCountRepeatedShots() + 1);
 			return new ShotResult(true, true, null, false);
 		}
 
@@ -383,9 +381,9 @@ public class Game implements IGame
 		else
 		{
 			ship.shoot(pos);
-			countHits++;
+			gameStatistics.setCountHits(gameStatistics.getCountHits() + 1);
 			if (!ship.stillFloating()) {
-				countSinks++;
+				gameStatistics.setCountSinks(gameStatistics.getCountSinks() + 1);
 			}
 			return new ShotResult(true, false, ship, !ship.stillFloating());
 		}
@@ -394,25 +392,25 @@ public class Game implements IGame
 	@Override
 	public int getRepeatedShots()
 	{
-		return this.countRepeatedShots;
+		return gameStatistics.getRepeatedShots();
 	}
 
 	@Override
 	public int getInvalidShots()
 	{
-		return this.countInvalidShots;
+		return gameStatistics.getInvalidShots();
 	}
 
 	@Override
 	public int getHits()
 	{
-		return this.countHits;
+		return gameStatistics.getHits();
 	}
 
 	@Override
 	public int getSunkShips()
 	{
-		return this.countSinks;
+		return gameStatistics.getSunkShips();
 	}
 
 	@Override
