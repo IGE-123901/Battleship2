@@ -114,57 +114,103 @@ public class Move implements IMove {
 
 	// --- MÉTODOS EXTRAÍDOS (EXTRACT METHOD) ---
 
+	// O método principal fica agora super limpo e apenas delega tarefas
 	private void printVerboseSummary(int validShots, int repeatedShots, int missedShots, int outsideShots,
 									 Map<String, Integer> sunkBoatsCount, Map<String, Integer> hitsPerBoat) {
 		StringBuilder output = new StringBuilder();
 
 		if (validShots == 0 && repeatedShots > 0) {
-			output.append(repeatedShots).append(STR_TIRO).append(repeatedShots > 1 ? STR_PLURAL : "").append(STR_REPETIDO).append(repeatedShots > 1 ? STR_PLURAL : "");
+			appendRepeatedShotsOnly(output, repeatedShots);
 		} else {
-			if (validShots > 0) {
-				output.append(validShots).append(STR_TIRO).append(validShots > 1 ? STR_PLURAL : "").append(" válido").append(validShots > 1 ? STR_PLURAL : "").append(": ");
-			}
-
-			if (!sunkBoatsCount.isEmpty()) {
-				for (Map.Entry<String, Integer> entry : sunkBoatsCount.entrySet()) {
-					String boatName = entry.getKey();
-					int count = entry.getValue();
-					output.append(count).append(" ").append(boatName).append(count > 1 ? STR_PLURAL : "").append(" ao fundo").append(" + ");
-				}
-			}
-
-			if (!hitsPerBoat.isEmpty()) {
-				for (Map.Entry<String, Integer> entry : hitsPerBoat.entrySet()) {
-					String boatName = entry.getKey();
-					int hits = entry.getValue();
-					if (!sunkBoatsCount.containsKey(boatName)) {
-						output.append(hits).append(STR_TIRO).append(hits > 1 ? STR_PLURAL : "").append(" num(a) ").append(boatName).append(" + ");
-					}
-				}
-			}
-
-			if (missedShots > 0) {
-				output.append(missedShots).append(STR_TIRO).append(missedShots > 1 ? STR_PLURAL : "").append(" na água");
-			} else if (!sunkBoatsCount.isEmpty() || !hitsPerBoat.isEmpty()) {
-				output.setLength(output.length() - 2);
-			}
-
-			if (repeatedShots > 0) {
-				if (validShots > 0) {
-					output.append(", ");
-				}
-				output.append(repeatedShots).append(STR_TIRO).append(repeatedShots > 1 ? STR_PLURAL : "").append(STR_REPETIDO).append(repeatedShots > 1 ? STR_PLURAL : "");
-			}
+			appendMixedShotsSummary(output, validShots, repeatedShots, missedShots, sunkBoatsCount, hitsPerBoat);
 		}
 
+		appendOutsideShots(output, outsideShots);
+
+		System.out.println("Jogada nº" + this.number + " -> " + output);
+	}
+
+	// --- DECOMPOSE CONDITIONAL / EXTRACT METHOD ---
+
+	private void appendRepeatedShotsOnly(StringBuilder output, int repeatedShots) {
+		output.append(repeatedShots).append(STR_TIRO)
+				.append(repeatedShots > 1 ? STR_PLURAL : "")
+				.append(STR_REPETIDO)
+				.append(repeatedShots > 1 ? STR_PLURAL : "");
+	}
+
+	private void appendMixedShotsSummary(StringBuilder output, int validShots, int repeatedShots, int missedShots,
+										 Map<String, Integer> sunkBoatsCount, Map<String, Integer> hitsPerBoat) {
+		if (validShots > 0) {
+			output.append(validShots).append(STR_TIRO)
+					.append(validShots > 1 ? STR_PLURAL : "")
+					.append(" válido")
+					.append(validShots > 1 ? STR_PLURAL : "").append(": ");
+		}
+
+		appendSunkBoats(output, sunkBoatsCount);
+		appendHitsPerBoat(output, hitsPerBoat, sunkBoatsCount);
+		appendMissedShots(output, missedShots, sunkBoatsCount, hitsPerBoat);
+		appendRepeatedShotsSuffix(output, repeatedShots, validShots);
+	}
+
+	private void appendMissedShots(StringBuilder output, int missedShots, Map<String, Integer> sunkBoatsCount, Map<String, Integer> hitsPerBoat) {
+		if (missedShots > 0) {
+			output.append(missedShots).append(STR_TIRO)
+					.append(missedShots > 1 ? STR_PLURAL : "").append(" na água");
+		} else if (!sunkBoatsCount.isEmpty() || !hitsPerBoat.isEmpty()) {
+			output.setLength(output.length() - 2);
+		}
+	}
+
+	private void appendRepeatedShotsSuffix(StringBuilder output, int repeatedShots, int validShots) {
+		if (repeatedShots > 0) {
+			if (validShots > 0) {
+				output.append(", ");
+			}
+			output.append(repeatedShots).append(STR_TIRO)
+					.append(repeatedShots > 1 ? STR_PLURAL : "")
+					.append(STR_REPETIDO)
+					.append(repeatedShots > 1 ? STR_PLURAL : "");
+		}
+	}
+
+	private void appendOutsideShots(StringBuilder output, int outsideShots) {
 		if (outsideShots > 0) {
 			if (!output.isEmpty()) {
 				output.append(", ");
 			}
-			output.append(outsideShots).append(STR_TIRO).append(outsideShots > 1 ? STR_PLURAL : "").append(" exterior").append(outsideShots > 1 ? "es" : "");
+			output.append(outsideShots).append(STR_TIRO)
+					.append(outsideShots > 1 ? STR_PLURAL : "")
+					.append(" exterior")
+					.append(outsideShots > 1 ? "es" : "");
 		}
+	}
 
-		System.out.println("Jogada nº" + this.number + " -> " + output);
+	// (Manténs aqui os métodos appendSunkBoats e appendHitsPerBoat que criámos na mensagem anterior)
+
+	// --- MÉTODOS EXTRAÍDOS (EXTRACT METHOD) PARA REDUZIR A COMPLEXIDADE ---
+
+	private void appendSunkBoats(StringBuilder output, Map<String, Integer> sunkBoatsCount) {
+		if (!sunkBoatsCount.isEmpty()) {
+			for (Map.Entry<String, Integer> entry : sunkBoatsCount.entrySet()) {
+				String boatName = entry.getKey();
+				int count = entry.getValue();
+				output.append(count).append(" ").append(boatName).append(count > 1 ? STR_PLURAL : "").append(" ao fundo").append(" + ");
+			}
+		}
+	}
+
+	private void appendHitsPerBoat(StringBuilder output, Map<String, Integer> hitsPerBoat, Map<String, Integer> sunkBoatsCount) {
+		if (!hitsPerBoat.isEmpty()) {
+			for (Map.Entry<String, Integer> entry : hitsPerBoat.entrySet()) {
+				String boatName = entry.getKey();
+				int hits = entry.getValue();
+				if (!sunkBoatsCount.containsKey(boatName)) {
+					output.append(hits).append(STR_TIRO).append(hits > 1 ? STR_PLURAL : "").append(" num(a) ").append(boatName).append(" + ");
+				}
+			}
+		}
 	}
 
 	private Map<String, Object> buildJsonResponseMap(int validShots, int outsideShots, int repeatedShots, int missedShots,
