@@ -9,7 +9,12 @@
 | Tasks::menu | Long Method | Extract Method | 123901 |
 | Game::randomEnemyFire | Long Method | Decompose Conditional | 123901 |
 | Ship (linha 248) | Suspicious Indentation | Add Braces | 123901 |
-|Fleet::createRandom|	Duplicated Code	Extract Constant | Replace with Constant	|123002|
-|Move::processEnemyFire|	Long Method|	Extract Method|	123002|
+| Fleet::create             | Random Duplicated Code                 | Extract Constant / Replace with Constant | 123002 |
+| Game::printBoard          | Long Method                            | Extract Method                           | 123002 |
+| Game::randomEnemyFire     | Long Method                            | Extract Method                           | 123002 |
+| Main::menu                | Long Method / Switch Statements        | Extract Method                           | 123002 |
+| Move::processEnemyFire    | Duplicated Code                        | Extract Constant / Replace with Constant | 123002 |
+| Move::processEnemyFire    | Long Method                            | Extract Method                           | 123002 |
+| Move::printVerboseSummary | Nested expressions / Complex condition | Decompose Conditional / Extract Method   | 123002 |
 
 ## Houve alguns Refactorings que tivémos de repetir em branches diferentes, uma vez que não haviam suficientes para cada um fazer pelo menos 5
