@@ -1,12 +1,15 @@
+# Refactoring Opportunities
+
 | Local | Nome do Cheiro | Nome da Refabricação | Nº Aluno |
 |-------|---------------|---------------------|----------|
-| Ship | Redundant Assignment | Inline Variable | 122975 |
-| Game::randomEnemyFire | Redundant Initialization (jsonString) | Inline Variable | 123901 |
-| Game::randomEnemyFire | Performance (removeAll) | introduce variable |122975 |
+| Ship (linha 117) | Redundant Assignment | Safe Delete | 122975 |
+| Game::randomEnemyFire | Performance (removeAll) | Substitute Algorithm | 122975 |
 | Game::printBoard | Long Method | Extract Method | 122975 |
+| Move::processEnemyFire | Long Method | Extract Method | 122975 |
+| Ship (linha 228) | Suspicious Indentation | Add Braces | 122975 |
+| Game (linha 123) | Redundant Initialization | Safe Delete | 123901 |
 | Game (class) | Large Class | Extract Class | 123901 |
-| Move::processEnemyFire | Long Method | Move Method | 122975 |
-| Tasks::menu | Busy Wait | Extract Method | 123901 |
-| Ship::isAlive | Suspicious Indentation | Introduce Variable | 122975 |
+| Tasks::menu | Long Method | Extract Method | 123901 |
 | Game::randomEnemyFire | Long Method | Decompose Conditional | 123901 |
+| Ship (linha 248) | Suspicious Indentation | Add Braces | 123901 |
 
