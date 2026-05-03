@@ -153,5 +153,16 @@ Contributions are what make the open-source community such an amazing place to l
 Distributed under the MIT License. See `LICENSE` for more information.
 
 ---
+
+
+## Integração Contínua (CI)
+Este projeto utiliza **GitHub Actions** para garantir a qualidade do software através de testes automatizados. 
+
+O workflow **Java CI with Maven** está configurado para:
+1. Ser executado automaticamente a cada **Push** efetuado para o repositório.
+2. Compilar o projeto utilizando o Maven e o JDK.
+3. Executar toda a bateria de testes unitários JUnit.
+
+
 **Maintained by:** [@britoeabreu](https://github.com/britoeabreu)  
 *Created for the Software Engineering students at ISCTE-IUL.*
