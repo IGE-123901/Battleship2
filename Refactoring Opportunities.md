@@ -2,7 +2,7 @@
 |-------|---------------|---------------------|----------|
 | Ship | Redundant Assignment | Inline Variable | 122975 |
 | Game::randomEnemyFire | Redundant Initialization (jsonString) | Inline Variable | 123901 |
-| Game::randomEnemyFire | Performance (removeAll) | introduce variable 122975 |
+| Game::randomEnemyFire | Performance (removeAll) | introduce variable |122975 |
 | Game::printBoard | Long Method | Extract Method | 122975 |
 | Game (class) | Large Class | Extract Class | 123901 |
 | Move::processEnemyFire | Long Method | Move Method | 122975 |
