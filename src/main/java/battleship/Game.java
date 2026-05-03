@@ -229,19 +229,9 @@ public class Game implements IGame
 
 		IPosition newShot = null;
 		if (candidateShots.size() >= Game.NUMBER_SHOTS)
-			while (shots.size() < Game.NUMBER_SHOTS) {
-				newShot = candidateShots.get(random.nextInt(candidateShots.size()));
-				if (!shots.contains(newShot))
-					shots.add(newShot);
-			}
+			generateUniqueShots(shots, candidateShots, random);
 		else {
-			while (shots.size() < candidateShots.size()) {
-				newShot = candidateShots.get(random.nextInt(candidateShots.size()));
-				if (!shots.contains(newShot))
-					shots.add(newShot);
-			}
-			while (shots.size() < Game.NUMBER_SHOTS)
-				shots.add(newShot);
+			generateRemainingShots(shots, candidateShots, newShot, random);
 		}
 
 		System.out.print("rajada ");
@@ -252,6 +242,25 @@ public class Game implements IGame
 		this.fireShots(shots);
 
 		return Game.jsonShots(shots);
+	}
+
+	private static void generateRemainingShots(List<IPosition> shots, List<IPosition> candidateShots, IPosition newShot, Random random) {
+		while (shots.size() < candidateShots.size()) {
+			newShot = candidateShots.get(random.nextInt(candidateShots.size()));
+			if (!shots.contains(newShot))
+				shots.add(newShot);
+		}
+		while (shots.size() < Game.NUMBER_SHOTS)
+			shots.add(newShot);
+	}
+
+	private static void generateUniqueShots(List<IPosition> shots, List<IPosition> candidateShots, Random random) {
+		IPosition newShot;
+		while (shots.size() < Game.NUMBER_SHOTS) {
+			newShot = candidateShots.get(random.nextInt(candidateShots.size()));
+			if (!shots.contains(newShot))
+				shots.add(newShot);
+		}
 	}
 
 
