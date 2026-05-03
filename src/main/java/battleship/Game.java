@@ -23,6 +23,10 @@ public class Game implements IGame
 	 * @param showLegend  if true, displays an explanatory legend of the symbols used
 	 *                    to represent various elements such as ships, misses, hits, etc.
 	 */
+	/**
+	 * REFABRICAÇÃO: O método printBoard foi dividido em métodos mais pequenos (Extract Method)
+	 * para reduzir a Complexidade Cognitiva de 39 para um valor aceitável.
+	 */
 	public static void printBoard(IFleet fleet, List<IMove> moves, boolean show_shots, boolean showLegend) {
 
 		assert fleet != null;
@@ -30,10 +34,30 @@ public class Game implements IGame
 
 		char[][] map = new char[BOARD_SIZE][BOARD_SIZE];
 
+		initializeEmptyMap(map);
+		placeShipsOnMap(fleet, map);
+
+		if (show_shots) {
+			placeShotsOnMap(moves, map);
+		}
+
+		printGrid(map);
+
+		if (showLegend) {
+			printLegend();
+		}
+		System.out.println();
+	}
+
+	// --- MÉTODOS EXTRAÍDOS (EXTRACT METHOD) DO printBoard ---
+
+	private static void initializeEmptyMap(char[][] map) {
 		for (int r = 0; r < BOARD_SIZE; r++)
 			for (int c = 0; c < BOARD_SIZE; c++)
 				map[r][c] = EMPTY_MARKER;
+	}
 
+	private static void placeShipsOnMap(IFleet fleet, char[][] map) {
 		for (IShip ship : fleet.getShips()) {
 			for (IPosition ship_pos : ship.getPositions())
 				map[ship_pos.getRow()][ship_pos.getColumn()] = SHIP_MARKER;
@@ -41,20 +65,24 @@ public class Game implements IGame
 				for (IPosition adjacent_pos : ship.getAdjacentPositions())
 					map[adjacent_pos.getRow()][adjacent_pos.getColumn()] = SHIP_ADJACENT_MARKER;
 		}
+	}
 
-		if (show_shots)
-			for (IMove move : moves)
-				for (IPosition shot : move.getShots()) {
-					if (shot.isInside()){
-						int row = shot.getRow();
-						int col = shot.getColumn();
-						if (map[row][col] == SHIP_MARKER)
-							map[row][col] = SHOT_SHIP_MARKER;
-						if (map[row][col] == EMPTY_MARKER || map[row][col] == SHIP_ADJACENT_MARKER)
-							map[row][col] = SHOT_WATER_MARKER;
-					}
+	private static void placeShotsOnMap(List<IMove> moves, char[][] map) {
+		for (IMove move : moves) {
+			for (IPosition shot : move.getShots()) {
+				if (shot.isInside()) {
+					int row = shot.getRow();
+					int col = shot.getColumn();
+					if (map[row][col] == SHIP_MARKER)
+						map[row][col] = SHOT_SHIP_MARKER;
+					if (map[row][col] == EMPTY_MARKER || map[row][col] == SHIP_ADJACENT_MARKER)
+						map[row][col] = SHOT_WATER_MARKER;
 				}
+			}
+		}
+	}
 
+	private static void printGrid(char[][] map) {
 		System.out.println();
 		System.out.print("    ");
 		for (int col = 0; col < BOARD_SIZE; col++) {
@@ -81,13 +109,12 @@ public class Game implements IGame
 		for (int col = 0; col < BOARD_SIZE; col++)
 			System.out.print("--");
 		System.out.println("-+");
+	}
 
-		if (showLegend) {
-			System.out.println("          LEGENDA");
-			System.out.println("'" + SHIP_MARKER + "'->navio, '" + SHIP_ADJACENT_MARKER + "'->adjacente a navio, '" + EMPTY_MARKER + "'->água");
-			System.out.println("'" + SHOT_SHIP_MARKER + "'->Tiro certeiro, '" + SHOT_WATER_MARKER + "'->Tiro na água");
-		}
-		System.out.println();
+	private static void printLegend() {
+		System.out.println("          LEGENDA");
+		System.out.println("'" + SHIP_MARKER + "'->navio, '" + SHIP_ADJACENT_MARKER + "'->adjacente a navio, '" + EMPTY_MARKER + "'->água");
+		System.out.println("'" + SHOT_SHIP_MARKER + "'->Tiro certeiro, '" + SHOT_WATER_MARKER + "'->Tiro na água");
 	}
 
 	/**
@@ -188,9 +215,8 @@ public class Game implements IGame
 	}
 
 	@Override
-	public IFleet getAlienFleet()
-	{
-		return myFleet;
+	public IFleet getAlienFleet() {// BUG CORRIGIDO: Estava a retornar myFleet em vez de alienFleet
+		return alienFleet;
 	}
 
 	@Override
@@ -208,26 +234,19 @@ public class Game implements IGame
 	 * @return A JSON string representing the list of randomly generated enemy shots.
 	 * @throws RuntimeException if there is an error during the JSON serialization of the shots.
 	 */
+	/**
+	 * REFABRICAÇÃO: O método randomEnemyFire foi refabricado para extrair
+	 * a lógica de obter as posições usáveis, reduzindo a complexidade.
+	 */
 	public String randomEnemyFire() {
 
-		// Criar uma instância de Random com uma seed baseada no timestamp atual
 		Random random = new Random(System.currentTimeMillis());
 
-		Set<IPosition> usablePositions = new HashSet<IPosition>();
-		for (int r = 0; r < BOARD_SIZE; r++)
-			for (int c = 0; c < BOARD_SIZE; c++)
-				usablePositions.add(new Position(r, c));
-
-		this.myFleet.getSunkShips().forEach(ship -> usablePositions.removeAll(ship.getAdjacentPositions()));
-		this.alienMoves.forEach(move ->  usablePositions.removeAll(move.getShots()));
-
-		List<IPosition> candidateShots = new ArrayList<>(usablePositions);
-
-		// Criar lista para armazenar os tiros
+		// Lógica extraída para um novo método auxiliar
+		List<IPosition> candidateShots = getUsablePositions();
 		List<IPosition> shots = new ArrayList<IPosition>();
 
 		System.out.println();
-		// Gerar coordenadas únicas até atingir o número definido por NUMBER_SHOTS
 
 		IPosition newShot = null;
 		if (candidateShots.size() >= Game.NUMBER_SHOTS)
@@ -254,6 +273,20 @@ public class Game implements IGame
 		this.fireShots(shots);
 
 		return Game.jsonShots(shots);
+	}
+
+	// --- MÉTODO EXTRAÍDO (EXTRACT METHOD) DO randomEnemyFire ---
+
+	private List<IPosition> getUsablePositions() {
+		Set<IPosition> usablePositions = new HashSet<IPosition>();
+		for (int r = 0; r < BOARD_SIZE; r++)
+			for (int c = 0; c < BOARD_SIZE; c++)
+				usablePositions.add(new Position(r, c));
+
+		this.myFleet.getSunkShips().forEach(ship -> usablePositions.removeAll(ship.getAdjacentPositions()));
+		this.alienMoves.forEach(move ->  usablePositions.removeAll(move.getShots()));
+
+		return new ArrayList<>(usablePositions);
 	}
 
 

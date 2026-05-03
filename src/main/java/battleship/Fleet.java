@@ -11,6 +11,15 @@ import java.util.List;
  */
 public class Fleet implements IFleet
 {
+	// --- REFABRICAÇÃO APLICADA: Extract Constant (Replace with Constant) ---
+	// Definimos constantes para evitar a duplicação de "magic strings"
+	public static final String SHIP_GALEAO = "galeao";
+	public static final String SHIP_FRAGATA = "fragata";
+	public static final String SHIP_NAU = "nau";
+	public static final String SHIP_CARAVELA = "caravela";
+	public static final String SHIP_BARCA = "barca";
+	// ------------------------------------------------------------------------
+
 	/**
 	 * Creates a randomly generated fleet containing ships of various predefined types.
 	 * Each ship is assigned a random bearing and position. If a ship cannot be added
@@ -22,13 +31,13 @@ public class Fleet implements IFleet
 
 		Fleet randomFleet = new Fleet();
 
-		// Define the types of ships to be added
+		// Define the types of ships to be added (usando agora as constantes)
 		String[] shipTypes =
-					{"galeao",                           // 1 galleon
-				 	"fragata",                           // 1 frigate
- 				 	"nau", "nau",                        // 2 carracks
-					"caravela", "caravela", "caravela",  // 3 caravels
-					"barca", "barca", "barca", "barca"}; // 4 barges
+				{SHIP_GALEAO,                                                     // 1 galleon
+						SHIP_FRAGATA,                                                    // 1 frigate
+						SHIP_NAU, SHIP_NAU,                                              // 2 carracks
+						SHIP_CARAVELA, SHIP_CARAVELA, SHIP_CARAVELA,                     // 3 caravels
+						SHIP_BARCA, SHIP_BARCA, SHIP_BARCA, SHIP_BARCA};
 
 		int fleetSize = 0;
 
