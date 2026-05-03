@@ -70,8 +70,8 @@ public class TasksTest {
 	@Test
 	void constructor() {
 		assertAll(
-			() -> assertNotNull(tasks, "Error: expected Tasks instance to be created but it was null."),
-			() -> assertInstanceOf(Tasks.class, tasks, "Error: expected an instance of Tasks but got a different class.")
+				() -> assertNotNull(tasks, "Error: expected Tasks instance to be created but it was null."),
+				() -> assertInstanceOf(Tasks.class, tasks, "Error: expected an instance of Tasks but got a different class.")
 		);
 	}
 
@@ -103,8 +103,8 @@ public class TasksTest {
 	@Test
 	void menu6() {
 		String input = "lefrota " + validBargeFleetTokens() + System.lineSeparator()
-			+ "rajada A1 B2 C3" + System.lineSeparator()
-			+ "desisto";
+				+ "rajada A1 B2 C3" + System.lineSeparator()
+				+ "desisto";
 		assertMenuOutput(input, TIME_PREFIX, GOODBYE_MESSAGE);
 	}
 
@@ -117,7 +117,7 @@ public class TasksTest {
 	void menu8() {
 		String output = assertDoesNotThrow(() -> runMenu("scoreboard desisto"), "Error: menu should not throw when showing the scoreboard.");
 		assertTrue(output.contains(SCOREBOARD_EMPTY) || output.contains(SCOREBOARD_HEADER),
-			"Error: expected scoreboard output to show either an empty-state message or the scoreboard table, but got: " + output);
+				"Error: expected scoreboard output to show either an empty-state message or the scoreboard table, but got: " + output);
 	}
 
 	@Test
@@ -128,32 +128,32 @@ public class TasksTest {
 	@Test
 	void menu10() {
 		String input = String.join(System.lineSeparator(),
-			"lefrota " + validBargeFleetTokens(),
-			"rajada A1 A3 A5",
-			"rajada A7 A9 C1",
-			"rajada C3 C5 C7",
-			"rajada C9 E1 B2"
-			) + System.lineSeparator() + "desisto";
+				"lefrota " + validBargeFleetTokens(),
+				"rajada A1 A3 A5",
+				"rajada A7 A9 C1",
+				"rajada C3 C5 C7",
+				"rajada C9 E1 B2"
+		) + System.lineSeparator() + "desisto";
 
 		ExitCaptureResult result = runMenuCapturingExit(input, false);
 		assertAll(
-			() -> assertTrue(result.exitObserved.get(), "Error: expected the rajada branch to call System.exit(0) when all ships are sunk."),
-			() -> assertTrue(result.output.contains(TIME_PREFIX), "Error: expected the rajada run to process at least one move but got: " + result.output)
+				() -> assertTrue(result.exitObserved.get(), "Error: expected the rajada branch to call System.exit(0) when all ships are sunk."),
+				() -> assertTrue(result.output.contains(TIME_PREFIX), "Error: expected the rajada run to process at least one move but got: " + result.output)
 		);
 	}
 
 	@Test
 	void menu11() {
 		String input = String.join(System.lineSeparator(),
-			"lefrota " + validBargeFleetTokens(),
-			"simula",
-			"desisto"
-			) + System.lineSeparator();
+				"lefrota " + validBargeFleetTokens(),
+				"simula",
+				"desisto"
+		) + System.lineSeparator();
 
 		ExitCaptureResult result = runMenuCapturingExit(input, true);
 		assertAll(
-			() -> assertTrue(result.exitObserved.get(), "Error: expected the simula branch to call System.exit(0) when the game finishes."),
-			() -> assertTrue(result.output.contains(TIME_PREFIX), "Error: expected the simulation to process at least one move but got: " + result.output)
+				() -> assertTrue(result.exitObserved.get(), "Error: expected the simula branch to call System.exit(0) when the game finishes."),
+				() -> assertTrue(result.output.contains(TIME_PREFIX), "Error: expected the simulation to process at least one move but got: " + result.output)
 		);
 	}
 
@@ -185,73 +185,73 @@ public class TasksTest {
 	@Test
 	void menu17() {
 		String input = String.join(System.lineSeparator(),
-			"lefrota " + validBargeFleetTokens(),
-			"rajada A1 B2 C3",
-			"rajada A4 A6 A8",
-			"desisto"
-			) + System.lineSeparator();
+				"lefrota " + validBargeFleetTokens(),
+				"rajada A1 B2 C3",
+				"rajada A4 A6 A8",
+				"desisto"
+		) + System.lineSeparator();
 		assertMenuOutput(input, TIME_PREFIX, STATUS_PREFIX, GOODBYE_MESSAGE);
 	}
 
 	@Test
 	void menu18() {
 		String input = String.join(System.lineSeparator(),
-			"lefrota " + validBargeFleetTokens(),
-			"mapa",
-			"desisto"
-			) + System.lineSeparator();
+				"lefrota " + validBargeFleetTokens(),
+				"mapa",
+				"desisto"
+		) + System.lineSeparator();
 		assertMenuOutput(input, LEGEND, GOODBYE_MESSAGE);
 	}
 
 	@Test
 	void menu19() {
 		String input = String.join(System.lineSeparator(),
-			"lefrota " + validBargeFleetTokens(),
-			"tiros",
-			"desisto"
-			) + System.lineSeparator();
+				"lefrota " + validBargeFleetTokens(),
+				"tiros",
+				"desisto"
+		) + System.lineSeparator();
 		assertMenuOutput(input, LEGEND, GOODBYE_MESSAGE);
 	}
 
 	@Test
 	void menu20() {
 		String input = String.join(System.lineSeparator(),
-			"lefrota " + validBargeFleetTokens(),
-			"estado",
-			"desisto"
-			) + System.lineSeparator();
+				"lefrota " + validBargeFleetTokens(),
+				"estado",
+				"desisto"
+		) + System.lineSeparator();
 		assertMenuOutput(input, STATUS_PREFIX, GOODBYE_MESSAGE);
 	}
 
 	@Test
 	void menu21() throws Exception {
 		String input = String.join(System.lineSeparator(),
-			"lefrota " + validBargeFleetTokens(),
-			"historico",
-			"desisto"
-			) + System.lineSeparator();
+				"lefrota " + validBargeFleetTokens(),
+				"historico",
+				"desisto"
+		) + System.lineSeparator();
 		assertMenuOutput(input, HISTORY_HEADER, GOODBYE_MESSAGE);
 	}
 
 	@Test
 	void menu22() {
 		String input = String.join(System.lineSeparator(),
-			"gerafrota",
-			"rajada A1 A3 A5",
-			"desisto"
-			) + System.lineSeparator();
+				"gerafrota",
+				"rajada A1 A3 A5",
+				"desisto"
+		) + System.lineSeparator();
 		assertMenuOutput(input, TIME_PREFIX, GOODBYE_MESSAGE);
 	}
 
 	@Test
 	void menu23() {
 		String input = String.join(System.lineSeparator(),
-			"gerafrota",
-			"estado",
-			"mapa",
-			"tiros",
-			"desisto"
-			) + System.lineSeparator();
+				"gerafrota",
+				"estado",
+				"mapa",
+				"tiros",
+				"desisto"
+		) + System.lineSeparator();
 		assertMenuOutput(input, STATUS_PREFIX, LEGEND, GOODBYE_MESSAGE);
 	}
 
@@ -269,9 +269,9 @@ public class TasksTest {
 
 		String output = out.toString(StandardCharsets.UTF_8);
 		assertAll(
-			() -> assertTrue(output.contains(HELP_HEADER), "Error: expected help output to contain the help header but got: " + output),
-			() -> assertTrue(output.contains("gerafrota"), "Error: expected help output to mention 'gerafrota' but got: " + output),
-			() -> assertTrue(output.contains("desisto"), "Error: expected help output to mention 'desisto' but got: " + output)
+				() -> assertTrue(output.contains(HELP_HEADER), "Error: expected help output to contain the help header but got: " + output),
+				() -> assertTrue(output.contains("gerafrota"), "Error: expected help output to mention 'gerafrota' but got: " + output),
+				() -> assertTrue(output.contains("desisto"), "Error: expected help output to mention 'desisto' but got: " + output)
 		);
 	}
 
@@ -280,10 +280,10 @@ public class TasksTest {
 		try (Scanner scanner = new Scanner(validBargeFleetTokens())) {
 			Fleet fleet = Tasks.buildFleet(scanner);
 			assertAll(
-				() -> assertNotNull(fleet, "Error: expected a Fleet instance but got null."),
-				() -> assertEquals(Fleet.FLEET_SIZE, fleet.getShips().size(), "Error: expected a full fleet of 11 ships but got " + fleet.getShips().size()),
-				() -> assertEquals(new Position(0, 0), fleet.getShips().getFirst().getPosition(), "Error: expected the first ship to be at A1 but it was not."),
-				() -> assertEquals(new Position(4, 0), fleet.getShips().getLast().getPosition(), "Error: expected the last ship to be at E1 but it was not.")
+					() -> assertNotNull(fleet, "Error: expected a Fleet instance but got null."),
+					() -> assertEquals(Fleet.FLEET_SIZE, fleet.getShips().size(), "Error: expected a full fleet of 11 ships but got " + fleet.getShips().size()),
+					() -> assertEquals(new Position(0, 0), fleet.getShips().get(0).getPosition(), "Error: expected the first ship to be at A1 but it was not."),
+					() -> assertEquals(new Position(4, 0), fleet.getShips().get(fleet.getShips().size() - 1).getPosition(), "Error: expected the last ship to be at E1 but it was not.")
 			);
 		}
 	}
@@ -294,9 +294,9 @@ public class TasksTest {
 		try (Scanner scanner = new Scanner(input)) {
 			Fleet fleet = Tasks.buildFleet(scanner);
 			assertAll(
-				() -> assertEquals(Fleet.FLEET_SIZE, fleet.getShips().size(), "Error: expected the invalid ship kind to be skipped while still filling the fleet."),
-				() -> assertEquals(new Position(0, 0), fleet.getShips().getFirst().getPosition(), "Error: expected the first valid ship to be added after the invalid token."),
-				() -> assertEquals(new Position(4, 0), fleet.getShips().getLast().getPosition(), "Error: expected the fleet to finish with the last valid ship.")
+					() -> assertEquals(Fleet.FLEET_SIZE, fleet.getShips().size(), "Error: expected the invalid ship kind to be skipped while still filling the fleet."),
+					() -> assertEquals(new Position(0, 0), fleet.getShips().get(0).getPosition(), "Error: expected the first valid ship to be added after the invalid token."),
+					() -> assertEquals(new Position(4, 0), fleet.getShips().get(fleet.getShips().size() - 1).getPosition(), "Error: expected the fleet to finish with the last valid ship.")
 			);
 		}
 	}
@@ -307,9 +307,9 @@ public class TasksTest {
 		try (Scanner scanner = new Scanner(input)) {
 			Fleet fleet = Tasks.buildFleet(scanner);
 			assertAll(
-				() -> assertEquals(Fleet.FLEET_SIZE, fleet.getShips().size(), "Error: expected the duplicate ship to be rejected while the remaining ships completed the fleet."),
-				() -> assertEquals(new Position(0, 0), fleet.getShips().getFirst().getPosition(), "Error: expected the first ship to remain at the initial position."),
-				() -> assertEquals(new Position(0, 2), fleet.getShips().get(1).getPosition(), "Error: expected the second stored ship to be the first non-duplicate position.")
+					() -> assertEquals(Fleet.FLEET_SIZE, fleet.getShips().size(), "Error: expected the duplicate ship to be rejected while the remaining ships completed the fleet."),
+					() -> assertEquals(new Position(0, 0), fleet.getShips().get(0).getPosition(), "Error: expected the first ship to remain at the initial position."),
+					() -> assertEquals(new Position(0, 2), fleet.getShips().get(1).getPosition(), "Error: expected the second stored ship to be the first non-duplicate position.")
 			);
 		}
 	}
@@ -319,10 +319,10 @@ public class TasksTest {
 		try (Scanner scanner = new Scanner("fragata 2 2 e")) {
 			Ship ship = Tasks.readShip(scanner);
 			assertAll(
-				() -> assertInstanceOf(Frigate.class, ship, "Error: expected a Frigate instance but got a different ship type."),
-				() -> assertEquals("Fragata", ship.getCategory(), "Error: expected category 'Fragata' but got " + ship.getCategory()),
-				() -> assertEquals(Compass.EAST, ship.getBearing(), "Error: expected bearing EAST but got " + ship.getBearing()),
-				() -> assertEquals(new Position(2, 2), ship.getPosition(), "Error: expected ship position (2,2) but got " + ship.getPosition())
+					() -> assertInstanceOf(Frigate.class, ship, "Error: expected a Frigate instance but got a different ship type."),
+					() -> assertEquals("Fragata", ship.getCategory(), "Error: expected category 'Fragata' but got " + ship.getCategory()),
+					() -> assertEquals(Compass.EAST, ship.getBearing(), "Error: expected bearing EAST but got " + ship.getBearing()),
+					() -> assertEquals(new Position(2, 2), ship.getPosition(), "Error: expected ship position (2,2) but got " + ship.getPosition())
 			);
 		}
 	}
@@ -339,8 +339,8 @@ public class TasksTest {
 		try (Scanner scanner = new Scanner("5 6")) {
 			Position position = Tasks.readPosition(scanner);
 			assertAll(
-				() -> assertEquals(5, position.getRow(), "Error: expected row 5 but got " + position.getRow()),
-				() -> assertEquals(6, position.getColumn(), "Error: expected column 6 but got " + position.getColumn())
+					() -> assertEquals(5, position.getRow(), "Error: expected row 5 but got " + position.getRow()),
+					() -> assertEquals(6, position.getColumn(), "Error: expected column 6 but got " + position.getColumn())
 			);
 		}
 	}
@@ -357,9 +357,9 @@ public class TasksTest {
 		try (Scanner scanner = new Scanner("A3")) {
 			IPosition position = Tasks.readClassicPosition(scanner);
 			assertAll(
-				() -> assertEquals('A', position.getClassicRow(), "Error: expected classic row A but got " + position.getClassicRow()),
-				() -> assertEquals(3, position.getClassicColumn(), "Error: expected classic column 3 but got " + position.getClassicColumn()),
-				() -> assertEquals(new Position('A', 3), position, "Error: expected the parsed position to match A3 but got " + position)
+					() -> assertEquals('A', position.getClassicRow(), "Error: expected classic row A but got " + position.getClassicRow()),
+					() -> assertEquals(3, position.getClassicColumn(), "Error: expected classic column 3 but got " + position.getClassicColumn()),
+					() -> assertEquals(new Position('A', 3), position, "Error: expected the parsed position to match A3 but got " + position)
 			);
 		}
 	}
@@ -369,9 +369,9 @@ public class TasksTest {
 		try (Scanner scanner = new Scanner("b 7")) {
 			IPosition position = Tasks.readClassicPosition(scanner);
 			assertAll(
-				() -> assertEquals('B', position.getClassicRow(), "Error: expected classic row B but got " + position.getClassicRow()),
-				() -> assertEquals(7, position.getClassicColumn(), "Error: expected classic column 7 but got " + position.getClassicColumn()),
-				() -> assertEquals(new Position('B', 7), position, "Error: expected the parsed position to match B7 but got " + position)
+					() -> assertEquals('B', position.getClassicRow(), "Error: expected classic row B but got " + position.getClassicRow()),
+					() -> assertEquals(7, position.getClassicColumn(), "Error: expected classic column 7 but got " + position.getClassicColumn()),
+					() -> assertEquals(new Position('B', 7), position, "Error: expected the parsed position to match B7 but got " + position)
 			);
 		}
 	}
@@ -402,8 +402,8 @@ public class TasksTest {
 		Connection connection = (Connection) connField.get(db);
 
 		assertAll(
-			() -> assertNotNull(connection, "Error: expected the DatabaseManager connection to exist before closing it."),
-			() -> assertTrue(connection.isClosed(), "Error: expected the DatabaseManager connection to be closed after fecharBD().")
+				() -> assertNotNull(connection, "Error: expected the DatabaseManager connection to exist before closing it."),
+				() -> assertTrue(connection.isClosed(), "Error: expected the DatabaseManager connection to be closed after fecharBD().")
 		);
 	}
 
@@ -553,33 +553,32 @@ public class TasksTest {
 
 	private static String validBargeFleetTokens() {
 		return String.join(" ",
-			"barca", "0", "0", "n",
-			"barca", "0", "2", "n",
-			"barca", "0", "4", "n",
-			"barca", "0", "6", "n",
-			"barca", "0", "8", "n",
-			"barca", "2", "0", "n",
-			"barca", "2", "2", "n",
-			"barca", "2", "4", "n",
-			"barca", "2", "6", "n",
-			"barca", "2", "8", "n",
-			"barca", "4", "0", "n"
+				"barca", "0", "0", "n",
+				"barca", "0", "2", "n",
+				"barca", "0", "4", "n",
+				"barca", "0", "6", "n",
+				"barca", "0", "8", "n",
+				"barca", "2", "0", "n",
+				"barca", "2", "2", "n",
+				"barca", "2", "4", "n",
+				"barca", "2", "6", "n",
+				"barca", "2", "8", "n",
+				"barca", "4", "0", "n"
 		);
 	}
 
 	private static String validBargeFleetTokensWithoutFirst() {
 		return String.join(" ",
-			"barca", "0", "2", "n",
-			"barca", "0", "4", "n",
-			"barca", "0", "6", "n",
-			"barca", "0", "8", "n",
-			"barca", "2", "0", "n",
-			"barca", "2", "2", "n",
-			"barca", "2", "4", "n",
-			"barca", "2", "6", "n",
-			"barca", "2", "8", "n",
-			"barca", "4", "0", "n"
+				"barca", "0", "2", "n",
+				"barca", "0", "4", "n",
+				"barca", "0", "6", "n",
+				"barca", "0", "8", "n",
+				"barca", "2", "0", "n",
+				"barca", "2", "2", "n",
+				"barca", "2", "4", "n",
+				"barca", "2", "6", "n",
+				"barca", "2", "8", "n",
+				"barca", "4", "0", "n"
 		);
 	}
 }
-
