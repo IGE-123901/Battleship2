@@ -12,7 +12,7 @@
 | Fleet::create             | Random Duplicated Code                 | Extract Constant / Replace with Constant | 123002 |
 | Game::printBoard          | Long Method                            | Extract Method                           | 123002 |
 | Game::randomEnemyFire     | Long Method                            | Extract Method                           | 123002 |
-| Main::menu                | Long Method / Switch Statements        | Extract Method                           | 123002 |
+| Tasks::menu                | Long Method / Switch Statements        | Extract Method                           | 123002 |
 | Move::processEnemyFire    | Duplicated Code                        | Extract Constant / Replace with Constant | 123002 |
 | Move::processEnemyFire    | Long Method                            | Extract Method                           | 123002 |
 | Move::printVerboseSummary (método novo) | Nested expressions / Complex condition | Decompose Conditional / Extract Method   | 123002 |
