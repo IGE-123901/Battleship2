@@ -15,6 +15,6 @@
 | Main::menu                | Long Method / Switch Statements        | Extract Method                           | 123002 |
 | Move::processEnemyFire    | Duplicated Code                        | Extract Constant / Replace with Constant | 123002 |
 | Move::processEnemyFire    | Long Method                            | Extract Method                           | 123002 |
-| Move::printVerboseSummary | Nested expressions / Complex condition | Decompose Conditional / Extract Method   | 123002 |
+| Move::printVerboseSummary (método novo) | Nested expressions / Complex condition | Decompose Conditional / Extract Method   | 123002 |
 
 ## Houve alguns Refactorings que tivémos de repetir em branches diferentes, uma vez que não haviam suficientes para cada um fazer pelo menos 5
