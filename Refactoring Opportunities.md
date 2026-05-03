@@ -11,3 +11,5 @@
 | Ship (linha 248) | Suspicious Indentation | Add Braces | 123901 |
 |Fleet::createRandom|	Duplicated Code	Extract Constant | Replace with Constant	|123002|
 |Move::processEnemyFire|	Long Method|	Extract Method|	123002|
+
+## Houve alguns Refactorings que tivémos de repetir em branches diferentes, uma vez que não haviam suficientes para cada um fazer pelo menos 5
