@@ -19,7 +19,7 @@ public class Tasks {
 	/**
 	 * The constant LOGGER.
 	 */
-	private static final Logger LOGGER = LogManager.getLogger(Tasks.class);
+	private static final Logger LOGGER = LogManager.getLogger();
 	private static ExitHandler EXIT_HANDLER = System::exit;
 
 	/**
