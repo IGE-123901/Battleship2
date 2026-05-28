@@ -1,0 +1,10 @@
+target/
+.idea/
+.settings/
+.classpath
+.project
+.git/
+*.log
+*.iml
+qodana.sarif.json
+reports/
